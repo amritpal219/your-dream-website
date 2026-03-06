@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ThindWorldWeb — Order Your Website</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --white: #ffffff;
+  --off:   #f7f6f3;
+  --off2:  #eeece7;
+  --line:  #e2dfd8;
+  --line2: #d0cdc5;
+  --text:  #1a1916;
+  --text2: #6b6860;
+  --text3: #9e9b94;
+  --accent:    #2563eb;
+  --accent-lt: #eff4ff;
+  --accent-dk: #1d4ed8;
+  --green:     #16a34a;
+  --green-lt:  #f0fdf4;
+  --red:       #dc2626;
+  --red-lt:    #fef2f2;
+  --sh-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --sh:    0 4px 12px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.04);
+  --sh-md: 0 8px 24px rgba(0,0,0,.09), 0 2px 8px rgba(0,0,0,.05);
+  --r: 12px; --r-sm: 8px; --r-lg: 18px;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--off);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── LAYOUT ── */
+.wrap { max-width: 780px; margin: 0 auto; padding: 0 24px 100px; }
+
+/* ── HEADER ── */
+header { padding: 52px 0 40px; border-bottom: 1px solid var(--line); margin-bottom: 44px; }
+.brand { display:flex; align-items:center; gap:10px; margin-bottom:20px; }
+.brand-mark { width:36px;height:36px;background:var(--text);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--white);font-size:18px; }
+.brand-name { font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--text); }
+header h1 { font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,46px);font-weight:700;color:var(--text);line-height:1.1;letter-spacing:-.8px;margin-bottom:10px; }
+header p { font-size:16px;color:var(--text2);font-weight:300;max-width:480px;line-height:1.65; }
+
+/* ── STICKY PRICE BAR ── */
+.pbar { position:sticky;top:0;z-index:50;background:var(--white);border-bottom:1px solid var(--line);box-shadow:var(--sh-sm);display:none; }
+.pbar.on { display:block; }
+.pbar-in { max-width:780px;margin:0 auto;padding:11px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px; }
+.pbar-left { display:flex;align-items:baseline;gap:8px; }
+.pbar-lbl { font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px; }
+.pbar-amt { font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--text);letter-spacing:-.5px; }
+.pbar-chips { display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end; }
+.pchip { padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500;background:var(--accent-lt);color:var(--accent);border:1px solid #bfdbfe; }
+
+/* ── STEP NAV ── */
+.snav { display:flex;align-items:center;margin-bottom:36px; }
+.sitem { display:flex;align-items:center;gap:8px;flex:1;position:relative; }
+.sitem:not(:last-child)::after { content:'';flex:1;height:1px;background:var(--line);margin:0 10px;transition:background .4s; }
+.sitem.done:not(:last-child)::after { background:var(--accent); }
+.snum { width:30px;height:30px;border-radius:50%;border:1.5px solid var(--line2);background:var(--white);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--text2);flex-shrink:0;transition:all .3s; }
+.sitem.active .snum { background:var(--accent);border-color:var(--accent);color:var(--white); }
+.sitem.done .snum   { background:var(--green);border-color:var(--green);color:var(--white); }
+.slbl { font-size:12px;font-weight:500;color:var(--text3);white-space:nowrap;display:none; }
+@media(min-width:480px){.slbl{display:block}}
+.sitem.active .slbl { color:var(--accent); }
+.sitem.done .slbl   { color:var(--green); }
+
+/* ── CARD ── */
+.card { background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);padding:32px;margin-bottom:18px;box-shadow:var(--sh-sm);transition:border-color .2s,box-shadow .2s; }
+.card:hover { border-color:var(--line2);box-shadow:var(--sh); }
+.card-head { display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px;gap:12px; }
+.card-tg { display:flex;align-items:flex-start;gap:12px; }
+.card-ico { width:38px;height:38px;border-radius:10px;background:var(--off);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;margin-top:1px; }
+.card-title { font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--text);letter-spacing:-.3px; }
+.card-sub   { font-size:13px;color:var(--text2);margin-top:2px;font-weight:400; }
+.qbadge { font-size:11px;font-weight:600;color:var(--text3);background:var(--off);border:1px solid var(--line);padding:4px 10px;border-radius:20px;letter-spacing:.5px;white-space:nowrap;flex-shrink:0; }
+
+/* ── SECTION DIVIDER ── */
+.dlbl { display:flex;align-items:center;gap:10px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);margin:0 0 14px; }
+.dlbl hr { flex:1;border:none;border-top:1px solid var(--line); }
+
+/* ── OPTION GRID ── */
+.ogrid { display:grid;grid-template-columns:1fr 1fr;gap:10px; }
+.ogrid.c3 { grid-template-columns:1fr 1fr 1fr; }
+.ogrid.c1 { grid-template-columns:1fr; }
+@media(max-width:560px){ .ogrid,.ogrid.c3{grid-template-columns:1fr} }
+
+.ocard { position:relative;cursor:pointer;display:block; }
+.ocard input { position:absolute;opacity:0;width:0;height:0; }
+.oin { padding:16px 18px;border:1.5px solid var(--line);border-radius:var(--r);background:var(--white);transition:all .18s;position:relative;display:flex;flex-direction:column;gap:5px; }
+.ocard:hover .oin { border-color:var(--line2);background:var(--off);transform:translateY(-1px);box-shadow:var(--sh-sm); }
+.ocard input:checked+.oin { border-color:var(--accent);background:var(--accent-lt); }
+
+.odot { position:absolute;top:14px;right:14px;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--line2);background:var(--white);transition:all .18s;display:flex;align-items:center;justify-content:center; }
+.ocard input:checked+.oin .odot { background:var(--accent);border-color:var(--accent); }
+.odot::after { content:'';width:6px;height:6px;background:var(--white);border-radius:50%;opacity:0;transition:opacity .15s; }
+.ocard input:checked+.oin .odot::after { opacity:1; }
+
+.obox { position:absolute;top:14px;right:14px;width:18px;height:18px;border-radius:5px;border:1.5px solid var(--line2);background:var(--white);transition:all .18s;display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent; }
+.ocard input:checked+.oin .obox { background:var(--accent);border-color:var(--accent);color:var(--white); }
+
+.oemoji { font-size:20px; }
+.oname  { font-size:14px;font-weight:600;color:var(--text);padding-right:26px;line-height:1.3; }
+.odesc  { font-size:12px;color:var(--text2);line-height:1.5;padding-right:26px;font-weight:400; }
+.oprice { font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--text);margin-top:4px; }
+.ocard input:checked+.oin .oprice { color:var(--accent-dk); }
+.opopular { position:absolute;top:-1px;left:16px;background:var(--green);color:var(--white);font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:0 0 6px 6px; }
+
+.oin.hr { flex-direction:row;align-items:center;gap:12px; }
+.oin.hr .oname,.oin.hr .odesc { padding-right:0; }
+.oin.hr .oprice { margin:0 0 0 auto; }
+
+/* ── TOOLTIP ── */
+.twrap { position:relative;display:inline-flex;align-items:center; }
+.tbtn { width:16px;height:16px;border-radius:50%;background:var(--off2);border:1px solid var(--line2);color:var(--text3);font-size:9px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s; }
+.tbtn:hover { background:var(--accent);color:var(--white);border-color:var(--accent); }
+.tpop { position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--text);color:var(--white);border-radius:var(--r-sm);padding:10px 14px;font-size:12px;line-height:1.5;width:210px;z-index:100;display:none;box-shadow:var(--sh-md);pointer-events:none; }
+.tpop.on { display:block; }
+.tpop::after { content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--text); }
+
+/* ── INPUTS ── */
+.flbl { font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:block; }
+input[type="text"],input[type="email"],textarea,select {
+  width:100%;background:var(--white);border:1.5px solid var(--line);border-radius:var(--r-sm);
+  color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;font-weight:400;
+  padding:12px 14px;outline:none;transition:border-color .18s,box-shadow .18s;-webkit-appearance:none;
+}
+input:focus,textarea:focus,select:focus { border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.08); }
+input::placeholder,textarea::placeholder { color:var(--text3); }
+textarea { resize:vertical;min-height:90px;line-height:1.6; }
+select { cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6860' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px; }
+.irow { display:flex;align-items:stretch; }
+.iafx { padding:12px 14px;background:var(--off);border:1.5px solid var(--line);color:var(--text2);font-size:14px;font-weight:500;white-space:nowrap; }
+.iafx.pre { border-right:none;border-radius:var(--r-sm) 0 0 var(--r-sm); }
+.iafx.suf { border-left:none;border-radius:0 var(--r-sm) var(--r-sm) 0; }
+.irow input { border-radius:0;flex:1; }
+
+/* ── COLORS ── */
+.cwrap { background:var(--off);border:1.5px solid var(--line);border-radius:var(--r);padding:18px; }
+.crow { display:flex;align-items:center;gap:10px;margin-bottom:10px; }
+.swat { position:relative;width:42px;height:42px;flex-shrink:0;border-radius:var(--r-sm);overflow:hidden;border:1.5px solid var(--line);cursor:pointer; }
+.swat input[type="color"] { position:absolute;inset:-4px;width:calc(100% + 8px);height:calc(100% + 8px);border:none;padding:0;cursor:pointer;opacity:0; }
+.swprev { width:100%;height:100%;pointer-events:none; }
+.hexin { font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;letter-spacing:.5px;flex:1; }
+.bdel { width:32px;height:32px;border-radius:var(--r-sm);background:transparent;border:1.5px solid var(--line);color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .15s;flex-shrink:0; }
+.bdel:hover { background:var(--red-lt);border-color:var(--red);color:var(--red); }
+.badd { width:100%;padding:9px;border:1.5px dashed var(--line2);border-radius:var(--r-sm);background:transparent;color:var(--text3);cursor:pointer;font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:5px; }
+.badd:hover { border-color:var(--accent);color:var(--accent);background:var(--accent-lt); }
+
+/* ── FILE UPLOAD ── */
+.fdrop { border:1.5px dashed var(--line2);border-radius:var(--r);padding:28px 20px;text-align:center;cursor:pointer;background:var(--off);position:relative;transition:all .18s; }
+.fdrop:hover { border-color:var(--accent);background:var(--accent-lt); }
+.fdrop input[type="file"] { position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%; }
+.fdi { font-size:26px;margin-bottom:8px;display:block; }
+.fdt { font-size:14px;color:var(--text2); } .fdt strong { color:var(--accent); }
+.fdh { font-size:12px;color:var(--text3);margin-top:5px; }
+.fchips { display:flex;flex-wrap:wrap;gap:7px;margin-top:12px; }
+.fchip { display:flex;align-items:center;gap:5px;padding:5px 11px;background:var(--green-lt);border:1px solid #bbf7d0;border-radius:20px;font-size:12px;font-weight:500;color:var(--green); }
+.fchip button { background:none;border:none;cursor:pointer;color:#86efac;font-size:12px;transition:color .15s; }
+.fchip button:hover { color:var(--red); }
+
+.mt { margin-top:20px; } .mts { margin-top:12px; }
+
+/* ── BUTTONS ── */
+.brow { display:flex;gap:10px;margin-top:32px; }
+.btn { padding:14px 28px;border-radius:var(--r);font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .18s;border:none;display:inline-flex;align-items:center;justify-content:center;gap:7px;letter-spacing:.2px; }
+.btn-out  { background:var(--white);border:1.5px solid var(--line2);color:var(--text2); }
+.btn-out:hover  { background:var(--off);border-color:var(--text2);color:var(--text); }
+.btn-dark { background:var(--text);color:var(--white);flex:1;box-shadow:var(--sh-sm); }
+.btn-dark:hover { background:#2d2b27;transform:translateY(-1px);box-shadow:var(--sh); }
+.btn-blue { background:var(--accent);color:var(--white);flex:1;box-shadow:0 2px 8px rgba(37,99,235,.25); }
+.btn-blue:hover { background:var(--accent-dk);transform:translateY(-1px);box-shadow:0 4px 16px rgba(37,99,235,.35); }
+
+/* ── PAGES ── */
+.pg { display:none; }
+.pg.on { display:block;animation:up .35s ease; }
+@keyframes up { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── SUMMARY ── */
+.sum-hero { text-align:center;padding:40px 32px 28px;background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);margin-bottom:18px;box-shadow:var(--sh-sm); }
+.sum-num  { font-family:'Playfair Display',serif;font-size:68px;font-weight:700;color:var(--text);line-height:1;letter-spacing:-2px;margin-bottom:4px; }
+.sum-lbl  { font-size:12px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:2px;margin-bottom:16px; }
+.sum-note { font-size:15px;color:var(--text2);line-height:1.65;max-width:420px;margin:18px auto 0; }
+.sum-note strong { color:var(--text);font-weight:600; }
+.bdrow { display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:16px; }
+.bdtag { padding:5px 13px;background:var(--off);border:1px solid var(--line);border-radius:20px;font-size:12px;font-weight:500;color:var(--text2); }
+.bdtag .bp { color:var(--accent);font-weight:700;margin-left:4px; }
+
+.stbl { background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;margin-bottom:18px;box-shadow:var(--sh-sm); }
+.stbl-head { padding:14px 24px;border-bottom:1px solid var(--line);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3); }
+.srow { display:flex;align-items:flex-start;padding:14px 24px;border-bottom:1px solid var(--line);gap:16px; }
+.srow:last-child { border-bottom:none; }
+.skey { font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;width:130px;flex-shrink:0;padding-top:2px; }
+.sval { font-size:14px;color:var(--text);font-weight:500;flex:1;line-height:1.5;white-space:pre-wrap; }
+
+/* ── CONTACT ── */
+.ccard { background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);padding:28px 32px;margin-bottom:18px;box-shadow:var(--sh-sm); }
+.ccard h3 { font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text);margin-bottom:20px;letter-spacing:-.3px; }
+.tcol { display:grid;grid-template-columns:1fr 1fr;gap:14px; }
+@media(max-width:500px){.tcol{grid-template-columns:1fr}}
+.emsg { background:var(--red-lt);border:1px solid #fecaca;border-radius:var(--r-sm);padding:10px 14px;color:var(--red);font-size:13px;margin-top:12px;display:none; }
+.emsg.on { display:block; }
+
+/* ── SUCCESS ── */
+.succ { text-align:center;padding:80px 20px; }
+.succi { font-size:56px;margin-bottom:24px;display:block;animation:pop .5s ease; }
+@keyframes pop { 0%{transform:scale(0)} 60%{transform:scale(1.2)} 100%{transform:scale(1)} }
+.succ h2 { font-family:'Playfair Display',serif;font-size:34px;font-weight:700;color:var(--text);letter-spacing:-.5px;margin-bottom:12px; }
+.succ p { font-size:16px;color:var(--text2);max-width:400px;margin:0 auto 28px;line-height:1.65; }
+.succbox { display:inline-flex;flex-direction:column;gap:12px;background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);padding:24px 32px;text-align:left;box-shadow:var(--sh-sm); }
+.sirow { display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text2); }
+.sirow strong { color:var(--text); }
+
+/* ── LOADER ── */
+.ldr { position:fixed;inset:0;background:rgba(247,246,243,.88);backdrop-filter:blur(6px);z-index:999;display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px; }
+.ldr.on { display:flex; }
+.spin { width:38px;height:38px;border:2px solid var(--line2);border-top-color:var(--accent);border-radius:50%;animation:sp .7s linear infinite; }
+@keyframes sp { to{transform:rotate(360deg)} }
+.ltxt { font-size:14px;font-weight:500;color:var(--text2); }
+
+@media(max-width:600px){ .card{padding:22px 18px} header{padding:36px 0 28px} .pbar-chips{display:none} .srow{flex-direction:column;gap:4px} .skey{width:auto} .ccard{padding:22px 18px} .sum-num{font-size:52px} }
+</style>
+</head>
+<body>
+
+<!-- Loader -->
+<div class="ldr" id="ldr"><div class="spin"></div><div class="ltxt">Sending your order…</div></div>
+
+<!-- Sticky Price Bar -->
+<div class="pbar" id="pbar">
+  <div class="pbar-in">
+    <div class="pbar-left">
+      <span class="pbar-lbl">Total</span>
+      <span class="pbar-amt" id="barAmt">$0</span>
+    </div>
+    <div class="pbar-chips" id="barChips"></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header>
+    <div class="brand">
+      <div class="brand-mark">🌐</div>
+      <div class="brand-name">ThindWorldWeb</div>
+    </div>
+    <h1>Order Your Custom Website</h1>
+    <p>Answer a few questions, see your price instantly, and submit your order — all in one place.</p>
+  </header>
+
+  <!-- STEP NAV -->
+  <div class="snav">
+    <div class="sitem active" id="sd1"><div class="snum" id="sn1">1</div><div class="slbl">Your Website</div></div>
+    <div class="sitem" id="sd2"><div class="snum" id="sn2">2</div><div class="slbl">Services</div></div>
+    <div class="sitem" id="sd3"><div class="snum" id="sn3">3</div><div class="slbl">Summary</div></div>
+    <div class="sitem" id="sd4"><div class="snum" id="sn4">✓</div><div class="slbl">Done</div></div>
+  </div>
+
+  <!-- ══════════ STEP 1 ══════════ -->
+  <div class="pg on" id="step1">
+
+    <!-- UI Style -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-tg"><div class="card-ico">🎨</div><div><div class="card-title">UI Style</div><div class="card-sub">Choose the visual design language</div></div></div>
+        <div class="qbadge">Q 1 / 5</div>
+      </div>
+      <div class="dlbl">Select one <span class="twrap"><button class="tbtn" onclick="tip('t1',event)">?</button><div class="tpop" id="t1">Plain UI is clean and professional. Glow UI adds modern dark aesthetics with subtle glow effects for a premium feel.</div></span><hr></div>
+      <div class="ogrid">
+        <label class="ocard"><input type="radio" name="ui" value="Plain UI" onchange="calc()" checked>
+          <div class="oin"><div class="odot"></div><div class="oemoji">☀️</div><div class="oname">Plain UI</div><div class="odesc">Clean, minimal, timeless. Perfect for businesses wanting a professional look.</div><div class="oprice">$49</div></div>
+        </label>
+        <label class="ocard"><input type="radio" name="ui" value="Glow UI" onchange="calc()">
+          <div class="oin"><div class="odot"></div><div class="oemoji">✨</div><div class="oname">Glow UI</div><div class="odesc">Modern dark theme with neon-glow effects. Makes your site feel premium.</div><div class="oprice">$79</div></div>
+        </label>
+      </div>
+    </div>
+
+    <!-- Colors -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-tg"><div class="card-ico">🖌️</div><div><div class="card-title">Color Selection</div><div class="card-sub">Your brand colors or let the developer choose</div></div></div>
+        <div class="qbadge">Q 2 / 5</div>
+      </div>
+      <div class="dlbl">Color option <span class="twrap"><button class="tbtn" onclick="tip('t2',event)">?</button><div class="tpop" id="t2">Developer Chooses means the developer selects the best color palette for your industry and style — no effort from you.</div></span><hr></div>
+      <div class="ogrid" style="margin-bottom:14px">
+        <label class="ocard"><input type="radio" name="colOpt" value="dev" onchange="togCol()" checked>
+          <div class="oin"><div class="odot"></div><div class="oemoji">🤖</div><div class="oname">Developer Chooses</div><div class="odesc">Best palette selected automatically for your site.</div><div class="oprice" style="font-size:14px;font-weight:500;color:var(--text2)">Included</div></div>
+        </label>
+        <label class="ocard"><input type="radio" name="colOpt" value="custom" onchange="togCol()">
+          <div class="oin"><div class="odot"></div><div class="oemoji">🎨</div><div class="oname">I Pick Colors</div><div class="odesc">Use the color picker to choose your own brand colors.</div><div class="oprice">+$15</div></div>
+        </label>
+      </div>
+      <div id="colSec" style="display:none">
+        <div class="cwrap"><div id="crows"></div><button class="badd" type="button" onclick="addCol()">+ Add Color</button></div>
+      </div>
+    </div>
+
+    <!-- Category -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-tg"><div class="card-ico">🏷️</div><div><div class="card-title">Website Category</div><div class="card-sub">What type of website do you need?</div></div></div>
+        <div class="qbadge">Q 3 / 5</div>
+      </div>
+      <div class="dlbl">Pick or describe <span class="twrap"><button class="tbtn" onclick="tip('t3',event)">?</button><div class="tpop" id="t3">Choose from common categories or type your own. This helps the developer understand your audience and purpose.</div></span><hr></div>
+      <select id="catSel" onchange="togCat()">
+        <option value="">— Select a category —</option>
+        <option>Business</option><option>Portfolio</option><option>Restaurant</option>
+        <option>Blog</option><option>E-commerce</option><option value="Other">Other (describe below)</option>
+      </select>
+      <div id="catCustom" style="display:none" class="mts">
+        <input type="text" id="catTxt" placeholder="Describe your website category…" oninput="calc()">
+      </div>
+    </div>
+
+    <!-- Media -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-tg"><div class="card-ico">📸</div><div><div class="card-title">Images &amp; Videos</div><div class="card-sub">Where will your website's media come from?</div></div></div>
+        <div class="qbadge">Q 4 / 5</div>
+      </div>
+      <div class="dlbl">Select one <span class="twrap"><button class="tbtn" onclick="tip('t4',event)">?</button><div class="tpop" id="t4">Developer Add-on means the developer professionally sources and creates all media for you. Upload options let you provide your own files.</div></span><hr></div>
+      <div class="ogrid c1">
+        <label class="ocard"><input type="radio" name="media" value="Developer add-on images/videos" data-p="40" onchange="togMed()">
+          <div class="oin hr"><div class="obox">✓</div><span style="font-size:20px">🤖</span><div><div class="oname">Developer Add-on</div><div class="odesc">Developer professionally sources all images &amp; videos.</div></div><div class="oprice">+$40</div></div>
+        </label>
+        <label class="ocard"><input type="radio" name="media" value="Upload images" data-p="10" onchange="togMed()">
+          <div class="oin hr"><div class="obox">✓</div><span style="font-size:20px">🖼️</span><div><div class="oname">Upload Images</div><div class="odesc">I'll provide my own images.</div></div><div class="oprice">+$10</div></div>
+        </label>
+        <label class="ocard"><input type="radio" name="media" value="Upload videos" data-p="15" onchange="togMed()">
+          <div class="oin hr"><div class="obox">✓</div><span style="font-size:20px">🎬</span><div><div class="oname">Upload Videos</div><div class="odesc">I'll provide my own videos.</div></div><div class="oprice">+$15</div></div>
+        </label>
+        <label class="ocard"><input type="radio" name="media" value="Upload both images and videos" data-p="22" onchange="togMed()">
+          <div class="oin hr"><div class="obox">✓</div><span style="font-size:20px">📦</span><div><div class="oname">Upload Both</div><div class="odesc">I'll upload both images and videos.</div></div><div class="oprice">+$22</div></div>
+        </label>
+      </div>
+      <div id="medUp" style="display:none" class="mt">
+        <div class="fdrop" onclick="document.getElementById('mfiles').click()">
+          <input type="file" id="mfiles" multiple accept="image/*,video/*" onchange="onFiles(this)" style="display:none">
+          <span class="fdi">📁</span>
+          <div class="fdt">Click to <strong>browse files</strong> or drag &amp; drop</div>
+          <div class="fdh">Images: JPG PNG GIF · Videos: MP4 MOV · Max 20 MB each</div>
+        </div>
+        <div class="fchips" id="fchips"></div>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-tg"><div class="card-ico">⚙️</div><div><div class="card-title">Website Features</div><div class="card-sub">What systems or functionality do you need?</div></div></div>
+        <div class="qbadge">Q 5 / 5</div>
+      </div>
+      <div class="dlbl">Describe your needs <span class="twrap"><button class="tbtn" onclick="tip('t5',event)">?</button><div class="tpop" id="t5">Tell the developer what your site needs. Examples: booking system, user login, Stripe payments, product catalog, contact form, live chat, admin panel…</div></span><hr></div>
+      <textarea id="feats" placeholder="e.g. I need a booking system where customers can pick dates, admin login to manage bookings, Stripe payment integration…"></textarea>
+    </div>
+
+    <div class="brow"><button class="btn btn-dark" onclick="go(2)">Continue to Services →</button></div>
+  </div>
+
+  <!-- ══════════ STEP 2 ══════════ -->
+  <div class="pg" id="step2">
+
+    <!-- Hosting -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-tg"><div class="card-ico">🌍</div><div><div class="card-title">Web Hosting</div><div class="card-sub">Keep your website online 24/7</div></div></div>
+        <div class="qbadge">Q 1 / 2</div>
+      </div>
+      <div class="dlbl">Choose duration <span class="twrap"><button class="tbtn" onclick="tip('t6',event)">?</button><div class="tpop" id="t6">Web hosting stores your website files and serves them to visitors. Longer plans offer better value and avoid yearly renewals.</div></span><hr></div>
+      <div class="ogrid c3" style="margin-bottom:10px">
+        <label class="ocard"><input type="radio" name="host" value="1 Year" data-p="50" onchange="calc()">
+          <div class="oin" style="align-items:center;text-align:center"><div class="odot"></div><div style="font-family:'Playfair Display',serif;font-size:30px;font-weight:700">1</div><div class="oname" style="padding:0">Year</div><div class="oprice">$50</div></div>
+        </label>
+        <label class="ocard"><input type="radio" name="host" value="2 Years" data-p="90" onchange="calc()">
+          <div class="oin" style="align-items:center;text-align:center;position:relative"><div class="odot"></div><div class="opopular">Best Value</div><div style="font-family:'Playfair Display',serif;font-size:30px;font-weight:700">2</div><div class="oname" style="padding:0">Years</div><div class="oprice">$90</div></div>
+        </label>
+        <label class="ocard"><input type="radio" name="host" value="3 Years" data-p="120" onchange="calc()">
+          <div class="oin" style="align-items:center;text-align:center"><div class="odot"></div><div style="font-family:'Playfair Display',serif;font-size:30px;font-weight:700">3</div><div class="oname" style="padding:0">Years</div><div class="oprice">$120</div></div>
+        </label>
+      </div>
+      <label class="ocard"><input type="radio" name="host" value="No Hosting" data-p="0" onchange="calc()" checked>
+        <div class="oin hr"><div class="obox">✓</div><span style="font-size:18px">🚫</span><div><div class="oname">No Hosting Needed</div><div class="odesc">I already have hosting or don't need it right now.</div></div><div class="oprice" style="font-size:14px;font-weight:500;color:var(--text2);margin:0 0 0 auto">Free</div></div>
+      </label>
+    </div>
+
+    <!-- Domain -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-tg"><div class="card-ico">🔗</div><div><div class="card-title">Domain Name</div><div class="card-sub">Your website's address on the internet</div></div></div>
+        <div class="qbadge">Q 2 / 2</div>
+      </div>
+      <div class="dlbl">Domain option <span class="twrap"><button class="tbtn" onclick="tip('t7',event)">?</button><div class="tpop" id="t7">A domain is your website's address like mybusiness.com. Includes 1 year of registration. Renewals are ~$15/yr after that.</div></span><hr></div>
+      <label class="ocard" style="display:block;margin-bottom:10px"><input type="radio" name="domOpt" value="yes" data-p="15" onchange="togDom()" checked>
+        <div class="oin hr"><div class="obox">✓</div><span style="font-size:18px">🌐</span><div><div class="oname">Get a Domain — 1 Year</div><div class="odesc">Register a .com domain for your website.</div></div><div class="oprice" style="margin:0 0 0 auto">$15</div></div>
+      </label>
+      <label class="ocard" style="display:block;margin-bottom:16px"><input type="radio" name="domOpt" value="no" data-p="0" onchange="togDom()">
+        <div class="oin hr"><div class="obox">✓</div><span style="font-size:18px">🚫</span><div><div class="oname">No Domain Needed</div><div class="odesc">I already have one or don't need it.</div></div><div class="oprice" style="font-size:14px;font-weight:500;color:var(--text2);margin:0 0 0 auto">Free</div></div>
+      </label>
+      <div id="domIn">
+        <label class="flbl">Enter your desired website name</label>
+        <div class="irow">
+          <span class="iafx pre">www.</span>
+          <input type="text" id="domName" placeholder="mybusiness" oninput="calc()">
+          <span class="iafx suf">.com</span>
+        </div>
+        <div style="font-size:12px;color:var(--text3);margin-top:7px">💡 Keep it short, memorable, and easy to spell</div>
+      </div>
+    </div>
+
+    <div class="brow">
+      <button class="btn btn-out" onclick="go(1)">← Back</button>
+      <button class="btn btn-dark" onclick="go(3)">View Price Summary →</button>
+    </div>
+  </div>
+
+  <!-- ══════════ STEP 3 ══════════ -->
+  <div class="pg" id="step3">
+    <div class="sum-hero">
+      <div class="sum-lbl">Total Investment</div>
+      <div class="sum-num" id="sumAmt">$0</div>
+      <div class="bdrow" id="bdrow"></div>
+      <div class="sum-note">Your total website cost is <strong id="sumMsg">$0</strong>.<br>If the price works for you, fill in your details below.<br>Your website will be ready within <strong>3–4 days</strong>. 🚀</div>
+    </div>
+
+    <div class="stbl">
+      <div class="stbl-head">Order Summary</div>
+      <div id="srows"></div>
+    </div>
+
+    <div class="ccard">
+      <h3>Your Contact Details</h3>
+      <div class="tcol">
+        <div><label class="flbl">Full Name</label><input type="text" id="cname" placeholder="e.g. Harpreet Singh"></div>
+        <div><label class="flbl">Email Address</label><input type="email" id="cemail" placeholder="e.g. you@gmail.com"></div>
+      </div>
+      <div class="emsg" id="ferr">Please enter your name and email to continue.</div>
+    </div>
+
+    <div class="brow">
+      <button class="btn btn-out" onclick="go(2)">← Go Back &amp; Edit</button>
+      <button class="btn btn-blue" onclick="submitOrder()">🚀 Submit My Order</button>
+    </div>
+  </div>
+
+  <!-- ══════════ STEP 4 ══════════ -->
+  <div class="pg" id="step4">
+    <div class="succ">
+      <span class="succi">🎉</span>
+      <h2>Order Submitted!</h2>
+      <p>Your website order has been sent to ThindWorldWeb. The developer will review your requirements and be in touch soon.</p>
+      <div class="succbox">
+        <div class="sirow">📧 Confirmation sent to: <strong id="sEmail">—</strong></div>
+        <div class="sirow">💰 Total agreed: <strong id="sPrice">—</strong></div>
+        <div class="sirow">⏱️ Expected delivery: <strong>3–4 business days</strong></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /wrap -->
+
+<script>
+const PRICES = { uiPlain:49, uiGlow:79, colCustom:15, host1:50, host2:90, host3:120, domain:15 };
+const palette = ['#2563eb','#16a34a','#d97706','#dc2626','#7c3aed','#0891b2'];
+let files=[], cid=0, step=1;
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded', () => {
+  calc();
+  addCol();
+  document.getElementById('domIn').style.display = 'block';
+});
+
+// ── STEP NAV ──
+function go(n) { if (n > step && !valid(step)) return; setStep(n); }
+
+function setStep(n) {
+  document.getElementById(`step${step}`).classList.remove('on');
+  const od = document.getElementById(`sd${step}`);
+  od.classList.remove('active');
+  if (step < n) { od.classList.add('done'); document.getElementById(`sn${step}`).textContent='✓'; }
+  step = n;
+  document.getElementById(`step${n}`).classList.add('on');
+  const nd = document.getElementById(`sd${n}`);
+  nd.classList.add('active'); nd.classList.remove('done');
+  document.getElementById(`sn${n}`).textContent = n;
+  document.getElementById('pbar').classList.toggle('on', n >= 2);
+  if (n === 3) buildSum();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function valid(n) {
+  if (n === 1) {
+    if (!q('input[name="ui"]:checked'))    { alert('Please select a UI style.'); return false; }
+    if (!q('input[name="media"]:checked')) { alert('Please select a media option.'); return false; }
+    if (!document.getElementById('catSel').value) { alert('Please select a website category.'); return false; }
+    if (document.getElementById('catSel').value==='Other' && !document.getElementById('catTxt').value.trim()) { alert('Please describe your category.'); return false; }
+  }
+  return true;
+}
+
+// ── PRICE CALC ──
+function q(s) { return document.querySelector(s); }
+
+function calc() {
+  let t=0; const its={};
+  const ui = q('input[name="ui"]:checked');
+  if (ui) { const p = ui.value==='Plain UI' ? PRICES.uiPlain : PRICES.uiGlow; t+=p; its.ui={l:ui.value,p}; }
+  if (q('input[name="colOpt"]:checked')?.value==='custom') { t+=PRICES.colCustom; its.col={l:'Custom Colors',p:PRICES.colCustom}; }
+  const med=q('input[name="media"]:checked');
+  if (med) { const p=+med.dataset.p||0; if(p){t+=p; its.med={l:'Media',p};} }
+  const host=q('input[name="host"]:checked');
+  if (host && host.value!=='No Hosting') { const p=+host.dataset.p||0; t+=p; its.host={l:`Hosting (${host.value})`,p}; }
+  if (q('input[name="domOpt"]:checked')?.value==='yes') { t+=PRICES.domain; its.dom={l:'Domain',p:PRICES.domain}; }
+  document.getElementById('barAmt').textContent=`$${t}`;
+  document.getElementById('barChips').innerHTML=Object.values(its).map(i=>`<div class="pchip">${i.l} $${i.p}</div>`).join('');
+  window._t=t; window._its=its;
+}
+
+// ── TOOLTIPS ──
+function tip(id,e) {
+  e.stopPropagation();
+  const el=document.getElementById(id), was=el.classList.contains('on');
+  document.querySelectorAll('.tpop.on').forEach(x=>x.classList.remove('on'));
+  if(!was) el.classList.add('on');
+}
+document.addEventListener('click',()=>document.querySelectorAll('.tpop.on').forEach(x=>x.classList.remove('on')));
+
+// ── COLORS ──
+function togCol() {
+  document.getElementById('colSec').style.display = q('input[name="colOpt"]:checked')?.value==='custom'?'block':'none';
+  calc();
+}
+function addCol() {
+  const id=cid++, def=palette[id%palette.length];
+  const d=document.createElement('div');
+  d.className='crow'; d.id=`cr${id}`;
+  d.innerHTML=`<div class="swat"><div class="swprev" id="sp${id}" style="background:${def}"></div><input type="color" value="${def}" oninput="sc(${id},this.value)"></div><input type="text" class="hexin" id="hx${id}" value="${def}" maxlength="7" oninput="sh(${id},this.value)" placeholder="#000000"><button class="bdel" type="button" onclick="dc(${id})">✕</button>`;
+  document.getElementById('crows').appendChild(d);
+}
+function sc(id,v){document.getElementById(`sp${id}`).style.background=v;document.getElementById(`hx${id}`).value=v;}
+function sh(id,v){if(/^#[0-9A-Fa-f]{6}$/.test(v))document.getElementById(`sp${id}`).style.background=v;}
+function dc(id){document.getElementById(`cr${id}`)?.remove();}
+function getCols(){return[...document.querySelectorAll('#crows .hexin')].map(i=>i.value);}
+
+// ── CATEGORY ──
+function togCat(){
+  document.getElementById('catCustom').style.display=document.getElementById('catSel').value==='Other'?'block':'none';
+  calc();
+}
+
+// ── MEDIA ──
+function togMed(){
+  const v=q('input[name="media"]:checked')?.value||'';
+  document.getElementById('medUp').style.display=v.startsWith('Upload')?'block':'none';
+  calc();
+}
+function onFiles(inp){files=[...files,...inp.files];renderFiles();}
+function renderFiles(){document.getElementById('fchips').innerHTML=files.map((f,i)=>`<div class="fchip">${f.type.startsWith('image/')?'🖼️':'🎬'} ${f.name}<button onclick="rf(${i})">✕</button></div>`).join('');}
+function rf(i){files.splice(i,1);renderFiles();}
+
+// ── DOMAIN ──
+function togDom(){
+  document.getElementById('domIn').style.display=q('input[name="domOpt"]:checked')?.value==='yes'?'block':'none';
+  calc();
+}
+
+// ── BUILD SUMMARY ──
+function buildSum() {
+  calc();
+  const t=window._t||0, its=window._its||{};
+  document.getElementById('sumAmt').textContent=`$${t}`;
+  document.getElementById('sumMsg').textContent=`$${t}`;
+  document.getElementById('bdrow').innerHTML=Object.values(its).map(i=>`<div class="bdtag">${i.l}<span class="bp">$${i.p}</span></div>`).join('');
+  const ui=q('input[name="ui"]:checked')?.value||'—';
+  const colV=q('input[name="colOpt"]:checked')?.value==='custom'?`Custom: ${getCols().join(', ')}`:'Developer selects';
+  const cs=document.getElementById('catSel').value;
+  const cat=cs==='Other'?document.getElementById('catTxt').value:cs||'—';
+  const med=q('input[name="media"]:checked')?.value||'—';
+  const feat=document.getElementById('feats').value||'—';
+  const host=q('input[name="host"]:checked')?.value||'—';
+  const dv=q('input[name="domOpt"]:checked')?.value;
+  const dn=document.getElementById('domName').value;
+  const dom=dv==='yes'&&dn?`${dn}.com`:'None';
+  const rows=[['UI Style',ui],['Colors',colV],['Category',cat],['Media',med],['Hosting',host],['Domain',dom],['Features',feat],...(files.length?[['Uploaded Files',files.map(f=>f.name).join(', ')]]:[]
+  )];
+  document.getElementById('srows').innerHTML=rows.map(([k,v])=>`<div class="srow"><div class="skey">${k}</div><div class="sval">${v}</div></div>`).join('');
+}
+
+// ── SUBMIT ──
+async function submitOrder() {
+  const nm=document.getElementById('cname').value.trim();
+  const em=document.getElementById('cemail').value.trim();
+  const err=document.getElementById('ferr');
+  if(!nm||!em){err.textContent='Please fill in your name and email.';err.classList.add('on');return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){err.textContent='Please enter a valid email address.';err.classList.add('on');return;}
+  err.classList.remove('on');
+  const t=window._t||0, its=window._its||{};
+  const fd=new FormData();
+  fd.append('clientName',nm); fd.append('clientEmail',em);
+  fd.append('uiStyle',q('input[name="ui"]:checked')?.value||'');
+  fd.append('colors',JSON.stringify(getCols()));
+  const cs=document.getElementById('catSel').value;
+  fd.append('category',cs==='Other'?document.getElementById('catTxt').value:cs);
+  fd.append('mediaOption',q('input[name="media"]:checked')?.value||'');
+  fd.append('features',document.getElementById('feats').value);
+  fd.append('hostingDuration',q('input[name="host"]:checked')?.value||'');
+  fd.append('domainName',document.getElementById('domName').value);
+  fd.append('totalPrice',t);
+  Object.entries(its).forEach(([k,v])=>fd.append(`price_${k}`,v.p));
+  files.forEach(f=>fd.append('mediaFiles',f));
+  document.getElementById('ldr').classList.add('on');
+  try {
+    const r=await fetch('/submit-order',{method:'POST',body:fd});
+    const d=await r.json();
+    document.getElementById('ldr').classList.remove('on');
+    if(d.success){
+      document.getElementById('sEmail').textContent=em;
+      document.getElementById('sPrice').textContent=`$${t}`;
+      setStep(4);
+      document.getElementById('pbar').classList.remove('on');
+    } else { alert('Error: '+(d.message||'Something went wrong.')); }
+  } catch(e) { document.getElementById('ldr').classList.remove('on'); alert('Network error. Please try again.'); }
+}
+</script>
+</body>
+</html>

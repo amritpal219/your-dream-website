@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: thindworldweb
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASS
+        sync: false
+      - key: DEVELOPER_EMAIL
+        value: thindworld3d@gmail.com
+      - key: PORT
+        value: 5000
